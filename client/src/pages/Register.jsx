@@ -7,11 +7,16 @@ const Register = () => {
 
   const register = async (e) => {
     e.preventDefault();
-    await fetch("http://localhost:4400/register", {
+    const res = await fetch("http://localhost:4400/register", {
       method: "POST",
       body: JSON.stringify({ username, password }),
       headers: { "Content-Type": "application/json" },
     });
+    if (!res.ok) {
+      alert("Something went wrong");
+    } else {
+      alert("You've registrated successfully");
+    }
   };
 
   return (
