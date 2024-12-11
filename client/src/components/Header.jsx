@@ -1,16 +1,17 @@
 import { Link } from "react-router-dom";
 import { listItemLight } from "../styles";
 import { links } from "../constants";
-import { useEffect, useState } from "react";
+import { useEffect, useContext } from "react";
+import { UserContext } from "../contexts/UserContext";
 
 const Header = () => {
-  const [username, setUsername] = useState(null);
+  const { userInfo, setUserInfo } = useContext(UserContext);
   useEffect(() => {
     fetch("http://localhost:4400/profile", {
       credentials: "include",
     }).then((res) => {
       res.json().then((userInfo) => {
-        setUsername(userInfo.username);
+        setUserInfo(userInfo);
       });
     });
   }, []);
@@ -20,6 +21,7 @@ const Header = () => {
       credentials: "include",
       method: "POST",
     });
+    setUserInfo(null);
   };
 
   return (
@@ -43,13 +45,13 @@ const Header = () => {
                 </Link>
               </li>
             ))}
-            {username ? (
+            {userInfo?.username ? (
               <>
                 <Link
                   style={{ transition: "all ease-out .3s" }}
                   className={listItemLight}
                   to="/create">
-                  {username}
+                  {userInfo?.username}
                 </Link>
                 <button
                   style={{ transition: "all ease-out .3s" }}
