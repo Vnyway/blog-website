@@ -32,6 +32,14 @@ const Header = () => {
                 Login
               </Link>
             </li>
+            <li>
+              <Link
+                style={{ transition: "all ease-out .3s" }}
+                className={listItemLight}
+                to="/register">
+                Register
+              </Link>
+            </li>
           </ul>
         </nav>
         <button className="pl-[15px] relative lg:hidden">
