@@ -5,6 +5,7 @@ import UserModel from "./models/User.js";
 import bcrypt from "bcryptjs";
 import dotenv from "dotenv";
 import jwt from "jsonwebtoken";
+import cookieParser from "cookie-parser";
 
 const salt = bcrypt.genSaltSync(10);
 
@@ -12,6 +13,7 @@ dotenv.config();
 const app = express();
 app.use(cors({ credentials: true, origin: process.env.ORIGIN }));
 app.use(express.json());
+app.use(cookieParser());
 
 mongoose.connect(process.env.MONGODB_CONNECTION_STRING);
 
@@ -45,6 +47,18 @@ app.post("/login", async (req, res) => {
   } else {
     res.status(400).json("Wrong password");
   }
+});
+
+app.get("/profile", (req, res) => {
+  const { token } = req.cookies;
+  jwt.verify(token, process.env.JWT_SECRET, {}, (err, info) => {
+    if (err) throw err;
+    res.json(info);
+  });
+});
+
+app.post("/logout", (req, res) => {
+  res.cookie("token", "").json("OK");
 });
 
 app.listen(4400);
