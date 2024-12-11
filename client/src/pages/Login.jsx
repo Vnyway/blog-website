@@ -1,23 +1,29 @@
 import React, { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, Navigate } from "react-router-dom";
 
 const Login = () => {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
-
+  const [redirect, setRedirect] = useState(false);
   const login = async (e) => {
     e.preventDefault();
-    const res = await fetch("http://localhost:4400/register", {
+    const res = await fetch("http://localhost:4400/login", {
       method: "POST",
       body: JSON.stringify({ username, password }),
       headers: { "Content-Type": "application/json" },
+      credentials: "include",
     });
-    if (!res.ok) {
-      alert("Something went wrong");
+    if (res.ok) {
+      setRedirect(true);
     } else {
-      alert("You've registrated successfully");
+      alert("Wrong password");
     }
   };
+
+  if (redirect) {
+    return <Navigate to="/" />;
+  }
+
   return (
     <main className="flex justify-center px-[20px]">
       <form
