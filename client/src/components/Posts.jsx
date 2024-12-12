@@ -14,13 +14,13 @@ const Posts = ({ shownPosts }) => {
             <div
               key={post.id}
               className="border-[#E8E8EA] rounded-[12px] border-[1px] p-[16px] flex flex-col gap-[16px] items-start hover:shadow-lg">
-              <div
+              {/* <div
                 className="w-full h-[240px] rounded-[6px]"
                 style={{
                   backgroundImage: `url(${post.postImg})`,
                   backgroundSize: "cover",
                   backgroundPosition: "center",
-                }}></div>
+                }}></div> */}
               <Link
                 to={`/?cat=${post.category}`}
                 className="bg-category bg-opacity-10 rounded-[6px] px-[10px] py-[4px] text-category">
@@ -32,18 +32,19 @@ const Posts = ({ shownPosts }) => {
                    font-semibold text-[24px] leading-[28px] line-clamp-2 h-[62px]">
                   {post.title}
                 </h3>
+                <p>{post.desc}</p>
               </Link>
               <Link to={`/blogger/${post.username}`}>
                 <div className="flex gap-[20px] items-center text-customGray">
                   <div className="flex items-center gap-[12px]">
-                    <img
+                    {/* <img
                       src={post.userImg}
                       alt={post.username}
                       className="size-[36px] rounded-full"
                     />
-                    <span>{post.username}</span>
+                    <span>{post.username}</span> */}
                   </div>
-                  <span>{formattedDate(post.date)}</span>
+                  <span>{formattedDate(post.createdAt)}</span>
                 </div>
               </Link>
             </div>

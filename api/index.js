@@ -84,4 +84,9 @@ app.post("/post", uploadMiddleware.single("file"), async (req, res) => {
   res.json(postDoc);
 });
 
+app.get("/posts", async (req, res) => {
+  const posts = await PostModel.find();
+  res.json(posts);
+});
+
 app.listen(4400);

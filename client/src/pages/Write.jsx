@@ -3,6 +3,7 @@ import { quillFormats, quillModules } from "../constants";
 import ReactQuill from "react-quill-new";
 import "react-quill-new/dist/quill.snow.css";
 import { formButton, inputItem } from "../styles";
+import { Navigate } from "react-router-dom";
 
 const Write = () => {
   const [title, setTitle] = useState("");
@@ -10,6 +11,7 @@ const Write = () => {
   const [content, setContent] = useState("");
   const [category, setCategory] = useState("");
   const [file, setFile] = useState("");
+  const [redirect, setRedirect] = useState(false);
   const createPost = async (e) => {
     const data = new FormData();
     data.set("title", title);
@@ -23,8 +25,14 @@ const Write = () => {
       method: "POST",
       body: data,
     });
-    console.log(await res.json());
+    if (res.ok) {
+      setRedirect(true);
+    }
   };
+
+  if (redirect) {
+    return <Navigate to="/" />;
+  }
 
   return (
     <section className="container mx-auto flex flex-col">
