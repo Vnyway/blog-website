@@ -88,3 +88,41 @@ export const posts = [
     category: "Travel",
   },
 ];
+
+export const categories = [
+  { id: 1, cat: "Lifestyle" },
+  { id: 2, cat: "Technology" },
+  { id: 3, cat: "Travel" },
+  { id: 4, cat: "Business" },
+  { id: 5, cat: "Economy" },
+  { id: 6, cat: "Sports" },
+];
+
+export const quillModules = {
+  toolbar: [
+    [{ header: [1, 2, false] }],
+    ["bold", "italic", "underline", "strike", "blockquote"],
+    [
+      { list: "ordered" },
+      { list: "bullet" },
+      { indent: "-1" },
+      { indent: "+1" },
+    ],
+    ["link", "image"],
+    ["clean"],
+  ],
+};
+
+export const quillFormats = [
+  "header",
+  "bold",
+  "italic",
+  "underline",
+  "strike",
+  "blockquote",
+  "list",
+  "bullet",
+  "indent",
+  "link",
+  "image",
+];

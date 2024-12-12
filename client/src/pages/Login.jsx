@@ -1,6 +1,7 @@
 import React, { useContext, useState } from "react";
 import { Link, Navigate } from "react-router-dom";
 import { UserContext } from "../contexts/UserContext";
+import { formButton, inputItem } from "../styles";
 
 const Login = () => {
   const [username, setUsername] = useState("");
@@ -45,7 +46,7 @@ const Login = () => {
           name="username"
           value={username}
           onChange={(e) => setUsername(e.target.value)}
-          className="bg-[#FFFFFF] border-[#DCDDDF] border-[1px]  h-[48px] w-full px-[16px] py-[12px] font-normal text-[16px] text-paragraph leading-[24px] outline-category mb-[8px]"
+          className={inputItem}
         />
         <input
           type="password"
@@ -53,7 +54,7 @@ const Login = () => {
           name="password"
           value={password}
           onChange={(e) => setPassword(e.target.value)}
-          className="bg-[#FFFFFF] border-[#DCDDDF] border-[1px]  h-[48px] w-full px-[16px] py-[12px] font-normal text-[16px] text-paragraph leading-[24px] outline-category mb-[8px]"
+          className={inputItem}
         />
         <div className="text-center font-normal text-[16px] text-customGray leading-[24px] pb-[8px] group">
           <Link to="/register">
@@ -64,11 +65,7 @@ const Login = () => {
             </span>
           </Link>
         </div>
-        <button
-          style={{ transition: "all ease-out .3s" }}
-          className="px-[20px] py-[12px] rounded-[6px] border-[1px] border-[#4B6BFB] bg-[#4B6BFB] hover:bg-[#FFFFFF] text-[#FFFFFF] hover:text-[#4B6BFB] font-medium text-[16px] leading-[24px]">
-          Login
-        </button>
+        <button className={formButton}>Login</button>
       </form>
     </main>
   );

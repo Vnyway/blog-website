@@ -50,7 +50,7 @@ const Header = () => {
                 <Link
                   style={{ transition: "all ease-out .3s" }}
                   className={listItemLight}
-                  to="/create">
+                  to="/write">
                   {userInfo?.username}
                 </Link>
                 <button
