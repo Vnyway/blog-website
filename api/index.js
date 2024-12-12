@@ -2,6 +2,7 @@ import express from "express";
 import cors from "cors";
 import mongoose from "mongoose";
 import UserModel from "./models/User.js";
+import PostModel from "./models/Post.js";
 import bcrypt from "bcryptjs";
 import dotenv from "dotenv";
 import jwt from "jsonwebtoken";
@@ -65,12 +66,22 @@ app.post("/logout", (req, res) => {
   res.cookie("token", "").json("OK");
 });
 
-app.post("/post", uploadMiddleware.single("file"), (req, res) => {
+app.post("/post", uploadMiddleware.single("file"), async (req, res) => {
   const { originalname, path } = req.file;
   const parts = originalname.split(".");
   const ext = parts[parts.length - 1];
-  fs.renameSync(path, path + "." + ext);
-  res.json(ext);
+  const newPath = path + "." + ext;
+  fs.renameSync(path, newPath);
+
+  const { title, desc, category, content } = req.body;
+  const postDoc = await PostModel.create({
+    title,
+    desc,
+    category,
+    content,
+    cover: newPath,
+  });
+  res.json(postDoc);
 });
 
 app.listen(4400);
