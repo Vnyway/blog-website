@@ -24,6 +24,7 @@ const Write = () => {
     const res = await fetch("http://localhost:4400/post", {
       method: "POST",
       body: data,
+      credentials: "include",
     });
     if (res.ok) {
       setRedirect(true);

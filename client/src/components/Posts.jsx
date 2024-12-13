@@ -12,21 +12,19 @@ const Posts = ({ shownPosts }) => {
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-[20px]">
           {shownPosts.map((post) => (
             <div
-              key={post.id}
+              key={post._id}
               className="border-[#E8E8EA] rounded-[12px] border-[1px] p-[16px] flex flex-col gap-[16px] items-start hover:shadow-lg">
-              {/* <div
+              <img
                 className="w-full h-[240px] rounded-[6px]"
-                style={{
-                  backgroundImage: `url(${post.postImg})`,
-                  backgroundSize: "cover",
-                  backgroundPosition: "center",
-                }}></div> */}
+                src={`http://localhost:4400/${post.cover}`}
+                alt="image"
+              />
               <Link
                 to={`/?cat=${post.category}`}
                 className="bg-category bg-opacity-10 rounded-[6px] px-[10px] py-[4px] text-category">
                 {post.category}
               </Link>
-              <Link to={`/singlePost/${post.id}`}>
+              <Link to={`/post/${post._id}`}>
                 <h3
                   className="text-[#181A2A]
                    font-semibold text-[24px] leading-[28px] line-clamp-2 h-[62px]">
@@ -41,8 +39,8 @@ const Posts = ({ shownPosts }) => {
                       src={post.userImg}
                       alt={post.username}
                       className="size-[36px] rounded-full"
-                    />
-                    <span>{post.username}</span> */}
+                    /> */}
+                    <span>{post.author.username}</span>
                   </div>
                   <span>{formattedDate(post.createdAt)}</span>
                 </div>
