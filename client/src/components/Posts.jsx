@@ -14,11 +14,15 @@ const Posts = ({ shownPosts }) => {
             <div
               key={post._id}
               className="border-[#E8E8EA] rounded-[12px] border-[1px] p-[16px] flex flex-col gap-[16px] items-start hover:shadow-lg">
-              <img
-                className="w-full h-[240px] rounded-[6px]"
-                src={`http://localhost:4400/${post.cover}`}
-                alt="image"
-              />
+              <Link
+                to={`/post/${post._id}`}
+                className="w-full h-[240px] rounded-[6px]">
+                <img
+                  className="w-full h-[240px] rounded-[6px]"
+                  src={`http://localhost:4400/${post.cover}`}
+                  alt="image"
+                />
+              </Link>
               <Link
                 to={`/?cat=${post.category}`}
                 className="bg-category bg-opacity-10 rounded-[6px] px-[10px] py-[4px] text-category">

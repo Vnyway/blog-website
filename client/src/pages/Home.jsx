@@ -1,6 +1,5 @@
 import { useEffect, useState } from "react";
-import { Posts } from "../components";
-// import { posts } from "../constants";
+import { PinnedPost, Posts } from "../components";
 
 const Home = () => {
   const [posts, setPosts] = useState([]);
@@ -12,7 +11,18 @@ const Home = () => {
       });
     });
   }, []);
-  return <main>{posts.length > 0 ? <Posts shownPosts={posts} /> : <></>}</main>;
+  return (
+    <main>
+      {posts.length > 0 ? (
+        <>
+          <PinnedPost latestPost={posts[0]} />
+          <Posts shownPosts={posts} />
+        </>
+      ) : (
+        <></>
+      )}
+    </main>
+  );
 };
 
 export default Home;
