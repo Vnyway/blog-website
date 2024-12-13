@@ -29,9 +29,9 @@ const PinnedPost = ({ latestPost }) => {
               <div className="flex gap-[10px] items-center">
                 <img
                   src={
-                    latestPost.userImg
-                      ? latestPost.userImg
-                      : "/images/bloggers/default.svg"
+                    latestPost.author.image
+                      ? `http://localhost:4400/${latestPost.author.image}`
+                      : "/images/layout/user.svg"
                   }
                   alt="user"
                   className="size-[36px] rounded-full"

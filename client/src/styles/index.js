@@ -1,7 +1,5 @@
 export const listItemLight =
-  "font-[400] text-[#696A75] hover:text-[#181A2A] transition-all ease-out duration-300 text-[18px]";
-export const burgerItemLight =
-  "font-[500] text-[#696A75] hover:text-[#181A2A] text-[20px]";
+  "font-[500] text-[#696A75] hover:text-[#181A2A] transition-all ease-out duration-300 text-[18px]";
 export const inputItem =
   "bg-[#FFFFFF] border-[#DCDDDF] border-[1px]  h-[48px] w-full px-[16px] py-[12px] font-normal text-[16px] text-paragraph leading-[24px] outline-category mb-[8px]";
 export const formButton =

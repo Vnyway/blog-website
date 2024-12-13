@@ -34,16 +34,23 @@ const Posts = ({ shownPosts }) => {
                    font-semibold text-[24px] leading-[28px] line-clamp-2 h-[62px]">
                   {post.title}
                 </h3>
-                <p>{post.desc}</p>
               </Link>
-              <Link to={`/blogger/${post.username}`}>
-                <div className="flex gap-[20px] items-center text-customGray">
+              <Link to={`/blogger/${post.username}`} className="w-full">
+                <div className="flex w-full justify-between items-center text-customGray">
                   <div className="flex items-center gap-[12px]">
-                    {/* <img
-                      src={post.userImg}
-                      alt={post.username}
-                      className="size-[36px] rounded-full"
-                    /> */}
+                    <img
+                      className={
+                        post.author.image
+                          ? "size-[40px] rounded-full"
+                          : "size-[40px]"
+                      }
+                      src={
+                        post.author.image
+                          ? `http://localhost:4400/${post.author.image}`
+                          : "/images/layout/user.png"
+                      }
+                      alt={post.author.username}
+                    />
                     <span>{post.author.username}</span>
                   </div>
                   <span>{formattedDate(post.createdAt)}</span>

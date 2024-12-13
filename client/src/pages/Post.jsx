@@ -44,10 +44,19 @@ const Post = () => {
               className="flex gap-[20px] items-center text-customGray">
               <div className="flex items-center gap-[12px]">
                 <img
-                  src={post.userImg || "/images/bloggers/default.svg"}
-                  alt={post.username}
+                  className={
+                    post.author.image
+                      ? "size-[40px] rounded-full"
+                      : "size-[30px]"
+                  }
+                  src={
+                    post.author.image
+                      ? `http://localhost:4400/${post.author.image}`
+                      : "/images/layout/user.png"
+                  }
+                  alt={post.author.username}
                 />
-                <span>{post.username}</span>
+                <span>{post.author.username}</span>
               </div>
               <span>{formattedDate(post.createdAt)}</span>
             </Link>

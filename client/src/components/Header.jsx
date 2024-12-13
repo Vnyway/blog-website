@@ -33,25 +33,30 @@ const Header = () => {
           className="w-[158px] hover:scale-105 outline-none">
           <img src="/images/layout/logo.svg" alt="logo" />
         </Link>
-        <nav className="hidden lg:flex items-center">
+        <nav className="flex items-center">
           <ul className="flex items-center gap-[30px]">
-            {links.map((link) => (
-              <li key={link.id}>
-                <Link
-                  style={{ transition: "all ease-out .3s" }}
-                  to={link.path}
-                  className={listItemLight}>
-                  {link.name}
-                </Link>
-              </li>
-            ))}
             {userInfo?.username ? (
-              <>
+              <li className="flex items-center gap-[30px]">
                 <Link
                   style={{ transition: "all ease-out .3s" }}
-                  className={listItemLight}
+                  className="flex items-center gap-[10px] group"
                   to="/write">
-                  {userInfo?.username}
+                  <img
+                    className={
+                      userInfo?.image
+                        ? "size-[40px] rounded-full"
+                        : "size-[30px]"
+                    }
+                    src={
+                      userInfo?.image
+                        ? `http://localhost:4400/${userInfo?.image}`
+                        : "/images/layout/user.png"
+                    }
+                    alt={userInfo?.username}
+                  />
+                  <span className="font-[500] text-[#696A75] group-hover:text-[#181A2A] transition-all ease-out duration-300 text-[18px]">
+                    Create Post
+                  </span>
                 </Link>
                 <button
                   style={{ transition: "all ease-out .3s" }}
@@ -59,7 +64,7 @@ const Header = () => {
                   onClick={logout}>
                   Logout
                 </button>
-              </>
+              </li>
             ) : (
               <>
                 <li>
@@ -82,9 +87,6 @@ const Header = () => {
             )}
           </ul>
         </nav>
-        <button className="pl-[15px] relative lg:hidden">
-          {/* <BurgerMenu /> */}
-        </button>
       </div>
     </header>
   );

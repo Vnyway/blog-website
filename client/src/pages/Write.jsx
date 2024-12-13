@@ -20,7 +20,6 @@ const Write = () => {
     data.set("content", content);
     data.set("file", file);
     e.preventDefault();
-    console.log(file);
     const res = await fetch("http://localhost:4400/post", {
       method: "POST",
       body: data,

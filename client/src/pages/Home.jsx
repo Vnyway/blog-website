@@ -6,7 +6,6 @@ const Home = () => {
   useEffect(() => {
     fetch("http://localhost:4400/posts").then((res) => {
       res.json().then((posts) => {
-        console.log(posts);
         setPosts(posts);
       });
     });
