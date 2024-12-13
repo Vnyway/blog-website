@@ -3,3 +3,45 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+.description h3 {
+  font-weight: 600;
+  font-size: 24px;
+  color: #242535;
+}
+
+.description blockquote {
+  padding: 32px;
+  border-radius: 12px;
+  background-color: #f6f6f7;
+  font-style: italic;
+  color: #181a2a;
+  font-size: 24px;
+  line-height: 32px;
+  border-left: 4px solid;
+  border-color: #e8e8ea;
+}
+
+@media (min-width: 100px) {
+  .description h3 {
+    font-weight: 600;
+    font-size: 20px;
+  }
+
+  .description blockquote {
+    padding: 10px;
+    font-size: 18px;
+  }
+}
+
+@media (min-width: 768px) {
+  .description h3 {
+    font-weight: 600;
+    font-size: 24px;
+  }
+
+  .description blockquote {
+    padding: 32px;
+    font-size: 24px;
+  }
+}
