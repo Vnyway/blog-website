@@ -1,8 +1,10 @@
-import React from "react";
+import React, { useContext } from "react";
 import { Link } from "react-router-dom";
 import { formattedDate } from "../functions";
+import { UserContext } from "../contexts/UserContext";
 
 const PinnedPost = ({ latestPost }) => {
+  const { setCategory } = useContext(UserContext);
   return (
     <section className="container mx-auto relative h-[300px] md:h-[435px] lg:h-[650px]">
       <div className="h-[200px] md:h-[400px] lg:h-[600px] rounded-[12px] relative">
@@ -15,6 +17,7 @@ const PinnedPost = ({ latestPost }) => {
           style={{ transition: "all ease-in-out .3s" }}
           className={`absolute bottom-0 left-[10%] w-[80%] md:w-[60%] lg:w-[40%] p-[20px] md:p-[40px] rounded-[12px] bg-[#FFFFFF] text-[#181A2A] shadow-lg flex flex-col items-start gap-[10px] md:gap-[24px]`}>
           <Link
+            onClick={() => setCategory(latestPost.category)}
             to={`/?cat=${latestPost.category}`}
             className="px-[10px] py-[4px] bg-category rounded-[6px] text-white font-medium text-[14px]">
             {latestPost.category}

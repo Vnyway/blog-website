@@ -11,6 +11,7 @@ import multer from "multer";
 import fs from "fs";
 import path from "path";
 import { fileURLToPath } from "url";
+import { v4 as uuid } from "uuid";
 
 const uploadMiddleware = multer({ dest: "uploads/" });
 
@@ -49,6 +50,45 @@ app.post("/register", uploadMiddleware.single("file"), async (req, res) => {
     res.status(400).json(error);
   }
 });
+
+// app.post("/register", uploadMiddleware.single("file"), async (req, res) => {
+//   let imagePath = null;
+
+//   if (req.file) {
+//     const { originalname, buffer, mimetype } = req.file; // Using multer's memory storage
+//     const parts = originalname.split(".");
+//     const ext = parts[parts.length - 1];
+//     const fileKey = `users/${uuidv4()}.${ext}`; // Generate unique file name
+
+//     const uploadParams = {
+//       Bucket: process.env.BUCKET_NAME, // Your S3 bucket name
+//       Key: fileKey,                   // File path and name in S3
+//       Body: buffer,                   // File buffer
+//       ContentType: mimetype,          // File MIME type
+//     };
+
+//     try {
+//       await s3.send(new PutObjectCommand(uploadParams)); // Upload to S3
+//       imagePath = fileKey; // Store the file path in S3
+//     } catch (error) {
+//       console.error("Error uploading to S3:", error);
+//       return res.status(500).json("Failed to upload image");
+//     }
+//   }
+
+//   const { username, password } = req.body;
+
+//   try {
+//     const userDoc = await UserModel.create({
+//       username,
+//       password: bcrypt.hashSync(password, salt),
+//       image: imagePath ? imagePath : null, // Store S3 image path in the database
+//     });
+//     res.json(userDoc);
+//   } catch (error) {
+//     res.status(400).json(error);
+//   }
+// });
 
 app.post("/login", async (req, res) => {
   const { username, password } = req.body;
@@ -136,7 +176,9 @@ app.put("/post", uploadMiddleware.single("file"), async (req, res) => {
 });
 
 app.get("/posts", async (req, res) => {
-  const posts = await PostModel.find()
+  const cat = req.query.cat;
+  const filter = cat ? { category: cat } : {};
+  const posts = await PostModel.find(filter)
     .populate("author", ["username", "image"])
     .sort({ createdAt: -1 })
     .limit(20);

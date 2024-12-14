@@ -1,5 +1,5 @@
 import { BrowserRouter, Routes, Route, Outlet } from "react-router-dom";
-import { Footer, Header } from "./components";
+import { Footer, Header, ScrollToTop } from "./components";
 import { Edit, Home, Login, Post, Register, Write } from "./pages";
 import { UserContextProvider } from "./contexts/UserContext";
 

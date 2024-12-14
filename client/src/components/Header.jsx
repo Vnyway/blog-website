@@ -5,7 +5,7 @@ import { useEffect, useContext } from "react";
 import { UserContext } from "../contexts/UserContext";
 
 const Header = () => {
-  const { userInfo, setUserInfo } = useContext(UserContext);
+  const { userInfo, setUserInfo, setCategory } = useContext(UserContext);
   useEffect(() => {
     fetch("http://localhost:4400/profile", {
       credentials: "include",
@@ -29,6 +29,7 @@ const Header = () => {
       <div className="container mx-auto h-[100px] flex justify-between items-center">
         <Link
           style={{ transition: "all ease-out .3s" }}
+          onClick={() => setCategory(null)}
           to="/"
           className="w-[158px] hover:scale-105 outline-none">
           <img src="/images/layout/logo.svg" alt="logo" />

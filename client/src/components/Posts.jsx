@@ -1,8 +1,10 @@
-import React from "react";
+import React, { useContext } from "react";
 import { Link } from "react-router-dom";
 import { formattedDate } from "../functions";
+import { UserContext } from "../contexts/UserContext";
 
 const Posts = ({ shownPosts }) => {
+  const { setCategory } = useContext(UserContext);
   return (
     <section>
       <div className="container mx-auto flex flex-col py-[40px] md:py-[80px]">
@@ -24,6 +26,7 @@ const Posts = ({ shownPosts }) => {
                 />
               </Link>
               <Link
+                onClick={() => setCategory(post.category)}
                 to={`/?cat=${post.category}`}
                 className="bg-category bg-opacity-10 rounded-[6px] px-[10px] py-[4px] text-category">
                 {post.category}
