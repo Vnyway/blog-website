@@ -9,7 +9,7 @@ const PinnedPost = ({ latestPost }) => {
     <section className="container mx-auto relative h-[300px] md:h-[435px] lg:h-[650px]">
       <div className="h-[200px] md:h-[400px] lg:h-[600px] rounded-[12px] relative">
         <img
-          src={`http://localhost:4400/${latestPost.cover}`}
+          src={latestPost.cover}
           className="absolute top-0 left-0 w-full h-full rounded-[12px]"
           alt={latestPost.title}
         />
@@ -33,7 +33,7 @@ const PinnedPost = ({ latestPost }) => {
                 <img
                   src={
                     latestPost.author.image
-                      ? `http://localhost:4400/${latestPost.author.image}`
+                      ? latestPost.author.image
                       : "/images/layout/user.svg"
                   }
                   alt="user"

@@ -51,7 +51,7 @@ const Post = () => {
                   }
                   src={
                     post.author.image
-                      ? `http://localhost:4400/${post.author.image}`
+                      ? post.author.image
                       : "/images/layout/user.png"
                   }
                   alt={post.author.username}
@@ -81,11 +81,7 @@ const Post = () => {
               </Link>
             )}
           </div>
-          <img
-            src={`http://localhost:4400/${post.cover}`}
-            alt={post.title}
-            className="w-full"
-          />
+          <img src={post.cover} alt={post.title} className="w-full" />
           <div
             style={{ transition: "all ease-in-out .3s" }}
             dangerouslySetInnerHTML={{ __html: sanitizedContent }}

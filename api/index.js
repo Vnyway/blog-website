@@ -11,11 +11,18 @@ import multer from "multer";
 import fs from "fs";
 import path from "path";
 import { fileURLToPath } from "url";
-import { v4 as uuid } from "uuid";
+import { v4 as uuidv4 } from "uuid";
+import { PutObjectCommand, GetObjectCommand } from "@aws-sdk/client-s3";
+import { getSignedUrl } from "@aws-sdk/s3-request-presigner";
+import { s3Bloggers } from "./buckets/s3clientBloggers.js";
+import { s3Posts } from "./buckets/s3clientPosts.js";
 
-const uploadMiddleware = multer({ dest: "uploads/" });
+const uploadMiddleware = multer({ storage: multer.memoryStorage() });
 
 const salt = bcrypt.genSaltSync(10);
+
+const bucketName = process.env.BUCKET_NAME;
+const bucketName1 = process.env.BUCKET_NAME1;
 
 dotenv.config();
 const app = express();
@@ -30,20 +37,37 @@ app.use("/uploads", express.static(__dirname + "/uploads"));
 mongoose.connect(process.env.MONGODB_CONNECTION_STRING);
 
 app.post("/register", uploadMiddleware.single("file"), async (req, res) => {
-  let newPath = null;
+  let imagePath = null;
+
   if (req.file) {
-    const { originalname, path } = req.file;
+    const { originalname, buffer, mimetype } = req.file;
     const parts = originalname.split(".");
     const ext = parts[parts.length - 1];
-    newPath = path + "." + ext;
-    fs.renameSync(path, newPath);
+    const fileKey = `users/${uuidv4()}.${ext}`;
+
+    const uploadParams = {
+      Bucket: process.env.BUCKET_NAME,
+      Key: fileKey,
+      Body: buffer,
+      ContentType: mimetype,
+    };
+
+    try {
+      await s3Bloggers.send(new PutObjectCommand(uploadParams));
+      imagePath = fileKey;
+    } catch (error) {
+      console.error("Error uploading to S3:", error);
+      return res.status(500).json("Failed to upload image");
+    }
   }
+
   const { username, password } = req.body;
+
   try {
     const userDoc = await UserModel.create({
       username,
       password: bcrypt.hashSync(password, salt),
-      image: newPath ? newPath : null,
+      image: imagePath ? imagePath : null,
     });
     res.json(userDoc);
   } catch (error) {
@@ -51,72 +75,75 @@ app.post("/register", uploadMiddleware.single("file"), async (req, res) => {
   }
 });
 
-// app.post("/register", uploadMiddleware.single("file"), async (req, res) => {
-//   let imagePath = null;
-
-//   if (req.file) {
-//     const { originalname, buffer, mimetype } = req.file; // Using multer's memory storage
-//     const parts = originalname.split(".");
-//     const ext = parts[parts.length - 1];
-//     const fileKey = `users/${uuidv4()}.${ext}`; // Generate unique file name
-
-//     const uploadParams = {
-//       Bucket: process.env.BUCKET_NAME, // Your S3 bucket name
-//       Key: fileKey,                   // File path and name in S3
-//       Body: buffer,                   // File buffer
-//       ContentType: mimetype,          // File MIME type
-//     };
-
-//     try {
-//       await s3.send(new PutObjectCommand(uploadParams)); // Upload to S3
-//       imagePath = fileKey; // Store the file path in S3
-//     } catch (error) {
-//       console.error("Error uploading to S3:", error);
-//       return res.status(500).json("Failed to upload image");
-//     }
-//   }
-
-//   const { username, password } = req.body;
-
-//   try {
-//     const userDoc = await UserModel.create({
-//       username,
-//       password: bcrypt.hashSync(password, salt),
-//       image: imagePath ? imagePath : null, // Store S3 image path in the database
-//     });
-//     res.json(userDoc);
-//   } catch (error) {
-//     res.status(400).json(error);
-//   }
-// });
-
 app.post("/login", async (req, res) => {
   const { username, password } = req.body;
-  const userDoc = await UserModel.findOne({ username });
-  const passwordCorrect = bcrypt.compareSync(password, userDoc.password);
-  if (passwordCorrect) {
+
+  try {
+    const userDoc = await UserModel.findOne({ username });
+    if (!userDoc) {
+      return res.status(404).json("User not found");
+    }
+
+    const passwordCorrect = bcrypt.compareSync(password, userDoc.password);
+    if (!passwordCorrect) {
+      return res.status(400).json("Wrong password");
+    }
+
+    let imageUrl = null;
+
+    if (userDoc.image) {
+      const getObjectParams = {
+        Bucket: bucketName,
+        Key: userDoc.image,
+      };
+
+      const command = new GetObjectCommand(getObjectParams);
+      imageUrl = await getSignedUrl(s3Bloggers, command, { expiresIn: 3600 });
+    }
+
     jwt.sign(
-      { username, id: userDoc._id, image: userDoc.image },
+      { username, id: userDoc._id, image: imageUrl },
       process.env.JWT_SECRET,
       {},
       (err, token) => {
         if (err) throw err;
         res
           .cookie("token", token)
-          .json({ id: userDoc._id, username, image: userDoc.image });
+          .json({ id: userDoc._id, username, image: imageUrl });
       }
     );
-  } else {
-    res.status(400).json("Wrong password");
+  } catch (error) {
+    console.error(error);
+    res.status(500).json("Something went wrong");
   }
 });
 
-app.get("/profile", (req, res) => {
+app.get("/profile", async (req, res) => {
   const { token } = req.cookies;
-  jwt.verify(token, process.env.JWT_SECRET, {}, (err, info) => {
-    if (err) throw err;
-    res.json(info);
-  });
+
+  try {
+    jwt.verify(token, process.env.JWT_SECRET, {}, async (err, info) => {
+      if (err) return res.status(401).json("Unauthorized");
+
+      let imageUrl = null;
+
+      const userDoc = await UserModel.findById(info.id);
+      if (userDoc.image) {
+        const getObjectParams = {
+          Bucket: bucketName,
+          Key: userDoc.image,
+        };
+
+        const command = new GetObjectCommand(getObjectParams);
+        imageUrl = await getSignedUrl(s3Bloggers, command, { expiresIn: 3600 });
+      }
+
+      res.json({ ...info, image: imageUrl });
+    });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json("Something went wrong");
+  }
 });
 
 app.post("/logout", (req, res) => {
@@ -124,11 +151,28 @@ app.post("/logout", (req, res) => {
 });
 
 app.post("/post", uploadMiddleware.single("file"), async (req, res) => {
-  const { originalname, path } = req.file;
-  const parts = originalname.split(".");
-  const ext = parts[parts.length - 1];
-  const newPath = path + "." + ext;
-  fs.renameSync(path, newPath);
+  let imagePath = null;
+  if (req.file) {
+    const { originalname, buffer, mimetype } = req.file;
+    const parts = originalname.split(".");
+    const ext = parts[parts.length - 1];
+    const fileKey = `posts/${uuidv4()}.${ext}`;
+
+    const uploadParams = {
+      Bucket: process.env.BUCKET_NAME1,
+      Key: fileKey,
+      Body: buffer,
+      ContentType: mimetype,
+    };
+
+    try {
+      await s3Posts.send(new PutObjectCommand(uploadParams));
+      imagePath = fileKey;
+    } catch (error) {
+      console.error("Error uploading to S3:", error);
+      return res.status(500).json("Failed to upload image");
+    }
+  }
 
   const { token } = req.cookies;
   jwt.verify(token, process.env.JWT_SECRET, {}, async (err, info) => {
@@ -139,7 +183,7 @@ app.post("/post", uploadMiddleware.single("file"), async (req, res) => {
       desc,
       category,
       content,
-      cover: newPath,
+      cover: imagePath ? imagePath : null,
       author: info.id,
     });
     res.json(postDoc);
@@ -178,20 +222,84 @@ app.put("/post", uploadMiddleware.single("file"), async (req, res) => {
 app.get("/posts", async (req, res) => {
   const cat = req.query.cat;
   const filter = cat ? { category: cat } : {};
-  const posts = await PostModel.find(filter)
-    .populate("author", ["username", "image"])
-    .sort({ createdAt: -1 })
-    .limit(20);
-  res.json(posts);
+
+  try {
+    const posts = await PostModel.find(filter)
+      .populate("author", ["username", "image"])
+      .sort({ createdAt: -1 })
+      .limit(20);
+
+    for (const post of posts) {
+      if (post.cover) {
+        const getObjectParams = {
+          Bucket: bucketName1,
+          Key: post.cover,
+        };
+
+        const command = new GetObjectCommand(getObjectParams);
+        const imageUrl = await getSignedUrl(s3Posts, command, {
+          expiresIn: 3600,
+        });
+
+        post.cover = imageUrl;
+      }
+
+      if (post.author.image) {
+        const getObjectParams = {
+          Bucket: bucketName,
+          Key: post.author.image,
+        };
+
+        const command = new GetObjectCommand(getObjectParams);
+        const imageUrl = await getSignedUrl(s3Bloggers, command, {
+          expiresIn: 3600,
+        });
+
+        post.author.image = imageUrl;
+      }
+    }
+
+    res.json(posts);
+  } catch (error) {
+    console.error("Error fetching posts:", error);
+    res.status(500).json({ message: "Error fetching posts" });
+  }
 });
 
 app.get("/post/:id", async (req, res) => {
   const { id } = req.params;
-  const post = await PostModel.findById(id).populate("author", [
+  const postDoc = await PostModel.findById(id).populate("author", [
     "username",
     "image",
   ]);
-  res.json(post);
+
+  if (postDoc.cover) {
+    let imageUrl = null;
+    const getObjectParams = {
+      Bucket: bucketName1,
+      Key: postDoc.cover,
+    };
+
+    const command = new GetObjectCommand(getObjectParams);
+    imageUrl = await getSignedUrl(s3Posts, command, { expiresIn: 3600 });
+
+    postDoc.cover = imageUrl;
+  }
+
+  if (postDoc.author.image) {
+    let imageUrl = null;
+    const getObjectParams = {
+      Bucket: bucketName,
+      Key: postDoc.author.image,
+    };
+
+    const command = new GetObjectCommand(getObjectParams);
+    imageUrl = await getSignedUrl(s3Bloggers, command, { expiresIn: 3600 });
+
+    postDoc.author.image = imageUrl;
+  }
+
+  res.json(postDoc);
 });
 
 app.listen(4400);

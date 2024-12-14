@@ -21,7 +21,7 @@ const Posts = ({ shownPosts }) => {
                 className="w-full h-[240px] rounded-[6px]">
                 <img
                   className="w-full h-[240px] rounded-[6px]"
-                  src={`http://localhost:4400/${post.cover}`}
+                  src={post.cover}
                   alt="image"
                 />
               </Link>
@@ -49,7 +49,7 @@ const Posts = ({ shownPosts }) => {
                       }
                       src={
                         post.author.image
-                          ? `http://localhost:4400/${post.author.image}`
+                          ? post.author.image
                           : "/images/layout/user.png"
                       }
                       alt={post.author.username}

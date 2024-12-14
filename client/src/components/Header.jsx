@@ -50,7 +50,7 @@ const Header = () => {
                     }
                     src={
                       userInfo?.image
-                        ? `http://localhost:4400/${userInfo?.image}`
+                        ? userInfo?.image
                         : "/images/layout/user.png"
                     }
                     alt={userInfo?.username}
