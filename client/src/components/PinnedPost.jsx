@@ -27,7 +27,7 @@ const PinnedPost = ({ latestPost }) => {
               {latestPost.title}
             </h1>
           </Link>
-          <Link to={`/blogger/${latestPost.author._id}`}>
+          <Link to={`/?uid=${latestPost.author._id}`}>
             <div className="flex flex-col md:flex-row gap-[10px] md:gap-[24px] md:items-center text-paragraph font-medium text-[16px]">
               <div className="flex gap-[10px] items-center">
                 <img

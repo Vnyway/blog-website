@@ -226,8 +226,7 @@ app.get("/posts", async (req, res) => {
   try {
     const posts = await PostModel.find(filter)
       .populate("author", ["username", "image"])
-      .sort({ createdAt: -1 })
-      .limit(20);
+      .sort({ createdAt: -1 });
 
     for (const post of posts) {
       if (post.cover) {

@@ -65,11 +65,11 @@ const Write = () => {
   }
 
   return (
-    <section className="container mx-auto flex flex-col">
+    <section className="container mx-auto flex flex-col py-[70px]">
       <form
         className="flex flex-col gap-[20px] w-full p-[32px] rounded-[12px] shadow-md bg-[#FFFFFF]"
         onSubmit={createPost}>
-        <h2>Create Post</h2>
+        <h2 className="text-2xl font-semibold">Create Post</h2>
 
         {errors.title && <p className="text-red-500 text-sm">{errors.title}</p>}
         <input

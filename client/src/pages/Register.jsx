@@ -10,8 +10,8 @@ const Register = () => {
 
   const validateInputs = () => {
     const newErrors = {};
-    if (!username || username.length < 3 || username.length > 15)
-      newErrors.username = "Username must be between 3 and 15 characters.";
+    if (!username || username.length < 3 || username.length > 30)
+      newErrors.username = "Username must be between 3 and 30 characters.";
     if (!password || password.length < 4)
       newErrors.password = "Password must be longer than 4 characters.";
     setErrors(newErrors);

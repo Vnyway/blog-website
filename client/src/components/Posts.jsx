@@ -38,7 +38,7 @@ const Posts = ({ shownPosts }) => {
                   {post.title}
                 </h3>
               </Link>
-              <Link to={`/blogger/${post.username}`} className="w-full">
+              <Link to={`/?uid=${post.author._id}`} className="w-full">
                 <div className="flex w-full justify-between items-center text-customGray">
                   <div className="flex items-center gap-[12px]">
                     <img

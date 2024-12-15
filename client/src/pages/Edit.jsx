@@ -77,11 +77,11 @@ const Edit = () => {
   }
 
   return (
-    <section className="container mx-auto flex flex-col">
+    <section className="container mx-auto flex flex-col py-[70px]">
       <form
         className="flex flex-col gap-[20px] w-full p-[32px] rounded-[12px] shadow-md bg-[#FFFFFF]"
         onSubmit={updatePost}>
-        <h2>Edit Post</h2>
+        <h2 className="text-2xl font-semibold">Edit Post</h2>
 
         {errors.title && <p className="text-red-500 text-sm">{errors.title}</p>}
         <input
