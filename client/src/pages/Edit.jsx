@@ -13,6 +13,8 @@ const Edit = () => {
   const [category, setCategory] = useState("");
   const [files, setFiles] = useState("");
   const [redirect, setRedirect] = useState(false);
+  const [errors, setErrors] = useState({});
+
   useEffect(() => {
     fetch(`http://localhost:4400/post/${id}`).then((res) => {
       res.json().then((post) => {
@@ -22,8 +24,34 @@ const Edit = () => {
         setCategory(post.category);
       });
     });
-  }, []);
+  }, [id]);
+
+  const validateInputs = () => {
+    const newErrors = {};
+    if (!title || title.length < 4 || title.length > 50) {
+      newErrors.title =
+        "Title is required and must be between 4 and 50 characters.";
+    }
+    if (!desc || desc.length < 20 || desc.length > 100) {
+      newErrors.desc =
+        "Description is required and must be between 20 and 100 characters.";
+    }
+    if (!category || category.length < 4 || category.length > 50) {
+      newErrors.category =
+        "Category is required and must be between 4 and 50 characters.";
+    }
+    if (!content || content.length < 100) {
+      newErrors.content =
+        "Content is required and must be at least 100 characters.";
+    }
+    setErrors(newErrors);
+    return Object.keys(newErrors).length === 0;
+  };
+
   const updatePost = async (e) => {
+    e.preventDefault();
+    if (!validateInputs()) return;
+
     const data = new FormData();
     data.set("title", title);
     data.set("desc", desc);
@@ -33,7 +61,7 @@ const Edit = () => {
     if (files[0]) {
       data.set("file", files[0]);
     }
-    e.preventDefault();
+
     const res = await fetch("http://localhost:4400/post", {
       method: "PUT",
       body: data,
@@ -47,36 +75,48 @@ const Edit = () => {
   if (redirect) {
     return <Navigate to={`/post/${id}`} />;
   }
+
   return (
     <section className="container mx-auto flex flex-col">
       <form
-        className="flex flex-col gap-[20px] w-full p-[32px] rounded-[12px] shadow-md
-            bg-[#FFFFFF]
-            "
+        className="flex flex-col gap-[20px] w-full p-[32px] rounded-[12px] shadow-md bg-[#FFFFFF]"
         onSubmit={updatePost}>
-        <h2>Create Post</h2>
+        <h2>Edit Post</h2>
+
+        {errors.title && <p className="text-red-500 text-sm">{errors.title}</p>}
         <input
           type="text"
           placeholder="Title"
-          className={inputItem}
+          className={`${inputItem} ${errors.title ? "border-red-500" : ""}`}
           value={title}
           onChange={(e) => setTitle(e.target.value)}
         />
+
+        {errors.desc && <p className="text-red-500 text-sm">{errors.desc}</p>}
         <input
           type="text"
           placeholder="Description"
-          className={inputItem}
+          className={`${inputItem} ${errors.desc ? "border-red-500" : ""}`}
           value={desc}
           onChange={(e) => setDesc(e.target.value)}
         />
+
+        {errors.category && (
+          <p className="text-red-500 text-sm">{errors.category}</p>
+        )}
         <input
           type="text"
           placeholder="Category"
-          className={inputItem}
+          className={`${inputItem} ${errors.category ? "border-red-500" : ""}`}
           value={category}
           onChange={(e) => setCategory(e.target.value)}
         />
+
         <input type="file" onChange={(e) => setFiles(e.target.files)} />
+
+        {errors.content && (
+          <p className="text-red-500 text-sm">{errors.content}</p>
+        )}
         <ReactQuill
           theme="snow"
           value={content}
@@ -84,6 +124,7 @@ const Edit = () => {
           modules={quillModules}
           formats={quillFormats}
         />
+
         <button className={`${formButton} mt-[20px]`}>Update Post</button>
       </form>
     </section>

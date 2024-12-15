@@ -7,7 +7,9 @@ const Login = () => {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [redirect, setRedirect] = useState(false);
+  const [errorMessage, setErrorMessage] = useState("");
   const { setUserInfo } = useContext(UserContext);
+
   const login = async (e) => {
     e.preventDefault();
     const res = await fetch("http://localhost:4400/login", {
@@ -22,7 +24,7 @@ const Login = () => {
         setRedirect(true);
       });
     } else {
-      alert("Wrong password");
+      setErrorMessage("Wrong username or password");
     }
   };
 
@@ -34,9 +36,7 @@ const Login = () => {
     <main className="flex justify-center px-[20px]">
       <form
         onSubmit={login}
-        className="flex flex-col gap-[20px] w-full md:w-[450px] my-[80px] p-[32px] rounded-[12px] shadow-md
-          bg-[#FFFFFF]
-        ">
+        className="flex flex-col gap-[20px] w-full md:w-[450px] my-[80px] p-[32px] rounded-[12px] shadow-md bg-[#FFFFFF]">
         <h1 className="text-center font-semibold text-[26px] text-[#181A2A]">
           Login
         </h1>
@@ -56,6 +56,9 @@ const Login = () => {
           onChange={(e) => setPassword(e.target.value)}
           className={inputItem}
         />
+        {errorMessage && (
+          <p className="text-red-500 text-center">{errorMessage}</p>
+        )}
         <div className="text-center font-normal text-[16px] text-customGray leading-[24px] pb-[8px] group">
           <Link to="/register">
             Do not have account?

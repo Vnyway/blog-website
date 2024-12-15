@@ -5,9 +5,9 @@ const PostSchema = new Schema(
   {
     title: { type: String, required: true, min: 4, max: 50 },
     desc: { type: String, required: true, min: 20, max: 100 },
-    category: String,
+    category: { type: String, required: true },
     content: { type: String, required: true, min: 100 },
-    cover: String,
+    cover: { type: String, required: true },
     author: { type: Schema.Types.ObjectId, ref: "User" },
   },
   { timestamps: true }

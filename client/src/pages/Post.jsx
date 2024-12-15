@@ -86,12 +86,6 @@ const Post = () => {
             style={{ transition: "all ease-in-out .3s" }}
             dangerouslySetInnerHTML={{ __html: sanitizedContent }}
             className="description text-[#3B3C4A] flex flex-col items-start gap-[15px] md:gap-[32px] font-normal text-[20px] leading-[32px]"></div>
-          <div className="w-full flex flex-col gap-[20px]">
-            <h3 className="text-[#181A2A] font-semibold text-[24px]">
-              Comments
-            </h3>
-            {/* Later */}
-          </div>
         </div>
       )}
     </main>
