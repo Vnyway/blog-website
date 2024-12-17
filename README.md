@@ -101,7 +101,9 @@
 
 ## Структура проекта
 
-![alt text](image_2024-12-16_16-16-10.png)
+- ![alt text](image_2024-12-16_16-16-10.png)
+
+- ![alt text](image.png)
 
 ## API
 
