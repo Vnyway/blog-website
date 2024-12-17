@@ -79,7 +79,7 @@
   SECRET_ACCESS_KEY1=**
   ```
 
-Приклад client-змінних
+- Приклад client-змінних
 
 - ```
   REACT_APP_ORIGIN="http://localhost:4400"
@@ -92,7 +92,7 @@
   npm start
   ```
 
-Запуск UI
+- Запуск UI
 
 - ```
   cd ../client
@@ -101,7 +101,7 @@
 
 ## Структура проекта
 
-...
+![alt text](image_2024-12-16_16-16-10.png)
 
 ## API
 
