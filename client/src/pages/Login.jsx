@@ -12,7 +12,7 @@ const Login = () => {
 
   const login = async (e) => {
     e.preventDefault();
-    const res = await fetch("http://localhost:4400/login", {
+    const res = await fetch(process.env.REACT_APP_ORIGIN + "/login", {
       method: "POST",
       body: JSON.stringify({ username, password }),
       headers: { "Content-Type": "application/json" },

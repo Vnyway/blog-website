@@ -22,7 +22,7 @@ const Posts = ({ shownPosts }) => {
                 <img
                   className="w-full h-[240px] rounded-[6px]"
                   src={post.cover}
-                  alt="image"
+                  alt={post.title}
                 />
               </Link>
               <Link

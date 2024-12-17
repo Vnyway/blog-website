@@ -50,7 +50,7 @@ const Write = () => {
     data.set("content", content);
     data.set("file", file);
 
-    const res = await fetch("http://localhost:4400/post", {
+    const res = await fetch(process.env.REACT_APP_ORIGIN + "/post", {
       method: "POST",
       body: data,
       credentials: "include",

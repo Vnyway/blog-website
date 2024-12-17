@@ -9,7 +9,7 @@ const Post = () => {
   const { userInfo } = useContext(UserContext);
   const [post, setPost] = useState(null);
   useEffect(() => {
-    fetch(`http://localhost:4400/post/${id}`).then((res) => {
+    fetch(process.env.REACT_APP_ORIGIN + `/post/${id}`).then((res) => {
       res.json().then((post) => {
         setPost(post);
       });

@@ -7,17 +7,19 @@ const Home = () => {
   const { category } = useContext(UserContext);
   useEffect(() => {
     if (!category) {
-      fetch("http://localhost:4400/posts").then((res) => {
+      fetch(process.env.REACT_APP_ORIGIN + "/posts").then((res) => {
         res.json().then((posts) => {
           setPosts(posts);
         });
       });
     } else {
-      fetch(`http://localhost:4400/posts?cat=${category}`).then((res) => {
-        res.json().then((posts) => {
-          setPosts(posts);
-        });
-      });
+      fetch(process.env.REACT_APP_ORIGIN + `/posts?cat=${category}`).then(
+        (res) => {
+          res.json().then((posts) => {
+            setPosts(posts);
+          });
+        }
+      );
     }
   }, [category]);
   return (

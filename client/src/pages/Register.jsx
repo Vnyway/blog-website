@@ -27,7 +27,7 @@ const Register = () => {
     data.set("file", file);
     data.set("password", password);
 
-    const res = await fetch("http://localhost:4400/register", {
+    const res = await fetch(process.env.REACT_APP_ORIGIN + "/register", {
       method: "POST",
       body: data,
     });
