@@ -42,63 +42,62 @@
 
 1. Клонувати репозиторій:
 
-```bash
-* `git clone https://github.com/Vnyway/blog-website`
-* `cd blog-website`
-```
+- ```bash
+  git clone https://github.com/Vnyway/blog-website
+  cd blog-website
+  ```
 
 2. Встановити залежності
 
-```bash
-* `cd client`
-* `npm install`
-* `cd ../server`
-* `npm install`
-```
+- ```bash
+  cd client
+  npm install
+  cd ../server
+  npm install
+  ```
 
 3. Додати змінні в .env-файл:
 
-Приклад api-змінних
+- Приклад api-змінних
 
-```
-* `MONGODB_CONNECTION_STRING="строка підключення до монгодб, яка дається при створенні нового монго-проекта"`
-* `JWT_SECRET="рандомно згенерована строка"`
-* `ORIGIN="http://localhost:3000"`
-```
+- ```
+  MONGODB_CONNECTION_STRING="строка підключення до монгодб, яка дається при створенні нового монго-проекта"
+  JWT_SECRET="рандомно згенерована строка"
+  ORIGIN="http://localhost:3000"
+  ```
 
-Конфігувація змінних, які отримуєш при створенні aws s3 bucket
+- Конфігувація змінних, які отримуєш при створенні aws s3 bucket
 
-```
-BUCKET_NAME=**
-BUCKET_REGION=**
-ACCESS_KEY=**
-SECRET_ACCESS_KEY=**
-
-BUCKET_NAME1=**
-BUCKET_REGION1=**
-ACCESS_KEY1=**
-SECRET_ACCESS_KEY1=**
-```
+- ```
+  BUCKET_NAME=**
+  BUCKET_REGION=**
+  ACCESS_KEY=**
+  SECRET_ACCESS_KEY=**
+  BUCKET_NAME1=**
+  BUCKET_REGION1=**
+  ACCESS_KEY1=**
+  SECRET_ACCESS_KEY1=**
+  ```
 
 Приклад client-змінних
 
-```
-REACT_APP_ORIGIN="http://localhost:4400"
-```
+- ```
+  REACT_APP_ORIGIN="http://localhost:4400"
+  ```
 
 4. Запуск сервера
 
-```
-cd server
-npm start
-```
+- ```
+  cd server
+  npm start
+  ```
 
 Запуск UI
 
-```
-cd ../client
-npm start
-```
+- ```
+  cd ../client
+  npm start
+  ```
 
 ## Структура проекта
 
