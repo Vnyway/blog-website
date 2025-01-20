@@ -14,11 +14,6 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v3
 
-      - name: Deploy API
-        run: |
-          chmod +x deploy-api.sh
-          ./deploy-api.sh
-
   deploy-client:
     name: Deploy Frontend
     runs-on: ubuntu-latest
@@ -26,8 +21,3 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
-
-      - name: Deploy Client
-        run: |
-          chmod +x deploy-client.sh
-          ./deploy-client.sh
