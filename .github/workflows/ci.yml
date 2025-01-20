@@ -24,9 +24,9 @@ jobs:
         working-directory: ./api
         run: npm install
 
-      - name: Check code format
+      - name: Check and fix code format
         working-directory: ./api
-        run: npm run format
+        run: npm run format:fix
 
       - name: Lint code
         working-directory: ./api
@@ -57,9 +57,9 @@ jobs:
         working-directory: ./client
         run: npm install
 
-      - name: Check code format
+      - name: Check and fix code format
         working-directory: ./client
-        run: npm run format
+        run: npm run format:fix
 
       - name: Lint code
         working-directory: ./client
