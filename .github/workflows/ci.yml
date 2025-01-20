@@ -28,6 +28,10 @@ jobs:
         working-directory: ./api
         run: chmod +x node_modules/.bin/prettier
 
+      - name: Give execute permissions to ESLint
+        working-directory: ./api
+        run: chmod +x node_modules/.bin/eslint
+
       - name: Check and fix code format
         working-directory: ./api
         run: npm run format:fix
@@ -64,6 +68,10 @@ jobs:
       - name: Give execute permissions to Prettier
         working-directory: ./client
         run: chmod +x node_modules/.bin/prettier
+
+      - name: Give execute permissions to ESLint
+        working-directory: ./api
+        run: chmod +x node_modules/.bin/eslint
 
       - name: Check and fix code format
         working-directory: ./client
