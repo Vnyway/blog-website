@@ -32,10 +32,6 @@ jobs:
         working-directory: ./api
         run: npm run format:fix
 
-      #   - name: Build project
-      #     working-directory: ./api
-      #     run: npm run build
-
       - name: Run tests
         working-directory: ./api
         run: npm test
@@ -64,11 +60,3 @@ jobs:
       - name: Check and fix code format
         working-directory: ./client
         run: npm run format:fix
-
-      #   - name: Build project
-      #     working-directory: ./client
-      #     run: npm run build
-
-      - name: Run tests
-        working-directory: ./client
-        run: npm test

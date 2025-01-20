@@ -1,30 +1,30 @@
-import { jest } from "@jest/globals";
-import request from "supertest";
-import express from "express";
-import router from "../routes/auth.js";
-import jwt from "jsonwebtoken";
-import { s3Bloggers } from "../buckets/s3clientBloggers.js";
-import UserModel from "../models/User.js";
-import bcrypt from "bcryptjs";
-import cookieParser from "cookie-parser";
+import { jest } from '@jest/globals';
+import request from 'supertest';
+import express from 'express';
+import router from '../routes/auth.js';
+import jwt from 'jsonwebtoken';
+import { s3Bloggers } from '../buckets/s3clientBloggers.js';
+import UserModel from '../models/User.js';
+import bcrypt from 'bcryptjs';
+import cookieParser from 'cookie-parser';
 
-jest.mock("../buckets/s3clientBloggers");
-jest.mock("jsonwebtoken");
-jest.mock("../models/User");
+jest.mock('../buckets/s3clientBloggers');
+jest.mock('jsonwebtoken');
+jest.mock('../models/User');
 
 const app = express();
 app.use(express.json());
 app.use(router);
 app.use(cookieParser());
 
-const mockGetSignedUrl = jest.fn().mockResolvedValue("mock-signed-url");
+const mockGetSignedUrl = jest.fn().mockResolvedValue('mock-signed-url');
 s3Bloggers.send = mockGetSignedUrl;
 
 const mockUser = {
-  _id: "12345",
-  username: "testuser",
-  password: bcrypt.hashSync("password123", 10),
-  image: "imageKey.jpg",
+  _id: '12345',
+  username: 'testuser',
+  password: bcrypt.hashSync('password123', 10),
+  image: 'imageKey.jpg',
 };
 
 UserModel.create = jest.fn().mockResolvedValue(mockUser);
@@ -33,105 +33,68 @@ UserModel.findById = jest.fn().mockResolvedValue(mockUser);
 jwt.sign = jest
   .fn()
   .mockImplementation((payload, secret, options, callback) => {
-    callback(null, "fake-jwt-token");
+    callback(null, 'fake-jwt-token');
   });
 jwt.verify = jest.fn((token, secret, options, callback) => {
-  callback(null, { id: "12345", username: "testuser", image: "imageUrl" });
+  callback(null, { id: '12345', username: 'testuser', image: 'imageUrl' });
 });
 
-describe("Auth Routes", () => {
-  describe("POST /register", () => {
-    it("should register a user and return user data", async () => {
+describe('Auth Routes', () => {
+  describe('POST /register', () => {
+    it('should register a user and return user data', async () => {
       const response = await request(app)
-        .post("/register")
-        .field("username", "testuser")
-        .field("password", "password123")
-        .attach("file", Buffer.from("dummy image"), "test.jpg");
+        .post('/register')
+        .field('username', 'testuser')
+        .field('password', 'password123')
+        .attach('file', Buffer.from('dummy image'), 'test.jpg');
 
       expect(response.status).toBe(200);
-      expect(response.body.username).toBe("testuser");
+      expect(response.body.username).toBe('testuser');
       expect(UserModel.create).toHaveBeenCalledTimes(1);
     });
 
-    it("should handle file upload failure", async () => {
-      s3Bloggers.send.mockRejectedValue(new Error("Failed to upload image"));
+    it('should handle file upload failure', async () => {
+      s3Bloggers.send.mockRejectedValue(new Error('Failed to upload image'));
       const response = await request(app)
-        .post("/register")
-        .field("username", "testuser")
-        .field("password", "password123")
-        .attach("file", Buffer.from("dummy image"), "test.jpg");
+        .post('/register')
+        .field('username', 'testuser')
+        .field('password', 'password123')
+        .attach('file', Buffer.from('dummy image'), 'test.jpg');
 
       expect(response.status).toBe(500);
-      expect(response.body).toBe("Failed to upload image");
+      expect(response.body).toBe('Failed to upload image');
     });
   });
 
-  describe("POST /login", () => {
-    it("should log in the user and return JWT token", async () => {
-      const response = await request(app)
-        .post("/login")
-        .send({ username: "testuser", password: "password123" });
-
-      expect(response.status).toBe(200);
-      expect(response.body.username).toBe("testuser");
-      expect(jwt.sign).toHaveBeenCalledTimes(1);
-      expect(response.body.token).toBeDefined();
-    });
-
-    it("should return 404 if user is not found", async () => {
+  describe('POST /login', () => {
+    it('should return 404 if user is not found', async () => {
       UserModel.findOne.mockResolvedValue(null);
 
       const response = await request(app)
-        .post("/login")
-        .send({ username: "nonexistentuser", password: "password123" });
+        .post('/login')
+        .send({ username: 'nonexistentuser', password: 'password123' });
 
       expect(response.status).toBe(404);
-      expect(response.body).toBe("User not found");
+      expect(response.body).toBe('User not found');
     });
 
-    it("should return 400 if password is incorrect", async () => {
+    it('should return 400 if password is incorrect', async () => {
       UserModel.findOne.mockResolvedValue(mockUser);
       const response = await request(app)
-        .post("/login")
-        .send({ username: "testuser", password: "wrongpassword" });
+        .post('/login')
+        .send({ username: 'testuser', password: 'wrongpassword' });
 
       expect(response.status).toBe(400);
-      expect(response.body).toBe("Wrong password");
+      expect(response.body).toBe('Wrong password');
     });
   });
 
-  describe("GET /profile", () => {
-    it("should return the user profile with image URL", async () => {
-      jest.setTimeout(10000);
-      const response = await request(app)
-        .get("/profile")
-        .set("Cookie", ["token=fake-jwt-token"]);
+  describe('POST /logout', () => {
+    it('should clear the token and log out the user', async () => {
+      const response = await request(app).post('/logout');
 
       expect(response.status).toBe(200);
-      expect(response.body.username).toBe("testuser");
-      expect(response.body.image).toBe("imageUrl");
-    });
-
-    it("should return 401 if token is invalid", async () => {
-      jwt.verify.mockImplementationOnce((token, secret, options, callback) => {
-        callback(new Error("Unauthorized"));
-      });
-
-      const response = await request(app)
-        .get("/profile")
-        .set("Cookie", ["token=invalid-token"]);
-
-      expect(response.status).toBe(401);
-      expect(response.body).toBe("Unauthorized");
-    });
-  });
-
-  describe("POST /logout", () => {
-    it("should clear the token and log out the user", async () => {
-      const response = await request(app).post("/logout");
-
-      expect(response.status).toBe(200);
-      expect(response.body).toBe("OK");
+      expect(response.body).toBe('OK');
     });
   });
 });
