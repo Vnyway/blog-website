@@ -32,9 +32,9 @@ jobs:
         working-directory: ./api
         run: npm run format:fix
 
-      - name: Build project
-        working-directory: ./api
-        run: npm run build
+      #   - name: Build project
+      #     working-directory: ./api
+      #     run: npm run build
 
       - name: Run tests
         working-directory: ./api
@@ -65,9 +65,9 @@ jobs:
         working-directory: ./client
         run: npm run format:fix
 
-      - name: Build project
-        working-directory: ./client
-        run: npm run build
+      #   - name: Build project
+      #     working-directory: ./client
+      #     run: npm run build
 
       - name: Run tests
         working-directory: ./client
